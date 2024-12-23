@@ -1,12 +1,21 @@
 import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize('dau_gia_Gif', 'root', null, {
-  host: 'localhost',
-  dialect: 'mysql' ,
-  port: 3306,
-  logging: console.log,
-}); 
+// Lấy thông tin kết nối từ các biến môi trường hoặc trực tiếp từ Railway.
+const DB_HOST = process.env.DB_HOST || 'containers-us-west-160.railway.app'; // Host của Railway
+const DB_PORT = process.env.DB_PORT || '12345'; // Cổng của Railway
+const DB_USER = process.env.DB_USER || 'root'; // Username của Railway
+const DB_PASSWORD = process.env.DB_PASSWORD || 'yourpassword'; // Mật khẩu của Railway
+const DB_NAME = process.env.DB_NAME || 'dau_gia_Gif'; // Tên cơ sở dữ liệu
 
+// Cấu hình kết nối Sequelize
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: 'mysql',
+  port: DB_PORT,
+  logging: console.log,
+});
+
+// Hàm kết nối tới cơ sở dữ liệu
 let connectDB = async () => {
   try {
     await sequelize.authenticate();
@@ -17,5 +26,5 @@ let connectDB = async () => {
   }
 };
 
-
+// Export kết nối database
 module.exports = connectDB;
